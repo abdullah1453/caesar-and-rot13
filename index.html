@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<title>Encryptor</title>
+		<meta name="description" content="Natural Language Form with custom text input and drop-down lists" />
+		<meta name="keywords" content="Natural Language UI, sentence form, text input, contenteditable, html5, css3, jquery" />
+		<meta name="author" content="Codrops" />
+		<!-- <link rel="shortcut icon" href="../favicon.ico"> --> 
+		<link rel="stylesheet" type="text/css" href="css/default.css" />
+		<link rel="stylesheet" type="text/css" href="css/component.css" />
+		<script src="js/modernizr.custom.js"></script>
+	</head>
+	<body class="nl-blurred">
+		<div class="container demo-1">
+			<header>
+				<h1>CAESAR and ROT13 <span>with charming ui by: <a target="_blank" href="https://github.com/abdullah1453"> Cecep </a></span></h1>	
+			</header>
+			<div class="main clearfix">
+				<!-- Form Input -->
+				<div id="nl-form" class="nl-form">
+					I want to 
+					<select id="opsi">
+						<option value="encrypt" selected>Encrypt</option>
+						<option value="decrypt">Decrypt</option>
+					</select>
+					<textarea onkeyup="textAreaAdjust(this)" id="input" rows="1" style="text-transform: uppercase;">type here . . . .</textarea>
+					With 
+					<select id="algo">
+						<option value="caesar" selected>Caesar</option>
+						<option value="rot13">Rot13</option>
+					</select>
+					Algorithm
+					<!-- <br />
+					in <input type="text" value="" placeholder="any city" data-subline="For example: <em>Los Angeles</em> or <em>New York</em>"/> -->
+					<div class="nl-submit-wrap">
+						<button id="submit" class="nl-submit" type="submit">Show me</button>
+					</div>
+					<div class="nl-overlay"></div>
+				</div>
+
+				<!-- The output -->
+				<dir id="form-output" class="nl-form">
+					<a id="back" href="#">&larr;Backward</a>
+					<div id="response">test</div>
+				</dir>
+			</div>
+		</div><!-- /container -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="js/nlform.js"></script>
+		<script>
+			var nlform = new NLForm( document.getElementById( 'nl-form' ) );
+		</script>
+		<script type="text/javascript">
+			/* Auto Resize Textarea */
+			function textAreaAdjust(o) {
+			  o.style.height = "1px";
+			  o.style.height = (o.scrollHeight)+"px";
+			}
+
+			/* Set Character */
+			var alphabet = [
+				'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+				'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+				'Y', 'Z'
+			]
+
+			/* Caesar chiper algorithm #simple */
+			function enCaesar(input) {
+				/* Define data first */
+				var data  = [];
+
+				/* Convert input to uppercase, so it will match the alphabet */
+				var text  = input.toUpperCase();
+
+				/* Split Input to array */
+				var words = text.split('');
+
+				/* Match each word with value in alphabet */
+				words.forEach(function (val, i) {
+
+					/* Only words with can be encrypted */
+					var h = /^[a-zA-Z()]+$/.test(val);
+
+					if (h) {
+						/* Find index of word in alphabet and add it with 3 */
+						var word = alphabet.indexOf(val) + 3;
+
+						/* if the index is more than 25 it must comeback to 0 */
+						if (word > (alphabet.length - 1)) {
+							word = word - (alphabet.length - 1) - 1;
+						}
+
+						/* set the word to data array */
+						data[i] = alphabet[word];
+					} else {
+
+						/* if it not a word (i.e Space) so it will not be encrypt */
+						data[i] = val;
+					}
+				});
+
+				/* convert data array to string */
+				return data.join('');
+			}
+
+			/* Caesar chiper algorithm decrypt #simple */
+			function deCaesar(input) {
+				/* Define data first */
+				var data  = [];
+
+				/* Convert input to uppercase, so it will match the alphabet */
+				var text  = input.toUpperCase();
+
+				/* Split Input to array */
+				var words = text.split('');
+
+				/* Match each word with value in alphabet */
+				words.forEach(function (val, i) {
+
+					/* Only words with can be encrypted */
+					var h = /^[a-zA-Z()]+$/.test(val);
+
+					if (h) {
+						/* Find index of word in alphabet and add it with 3 */
+						var word = alphabet.indexOf(val) - 3;
+
+						/* if the index is more than 25 it must comeback to 0 */
+						if (word < 0) {
+							word = word + (alphabet.length);
+						}
+
+						/* set the word to data array */
+						data[i] = alphabet[word];
+					} else {
+
+						/* if it not a word (i.e Space) so it will not be encrypt */
+						data[i] = val;
+					}
+				});
+
+				/* convert data array to string */
+				return data.join('');
+			}
+
+			/* Rot13 algorithm */
+			function rot13(input) {
+				/* Define data first */
+				var data  = [];
+
+				/* Convert input to uppercase, so it will match the alphabet */
+				var text  = input.toUpperCase();
+
+				/* Split Input to array */
+				var words = text.split('');
+
+				/* Match each word with value in alphabet */
+				words.forEach(function (val, i) {
+
+					/* Only words with can be encrypted */
+					var h = /^[a-zA-Z()]+$/.test(val);
+
+					if (h) {
+						/* Find index of word in alphabet and add it with 3 */
+						var word = alphabet.indexOf(val) + 13;
+
+						/* if the index is more than 25 it must comeback to 0 */
+						if (word > (alphabet.length - 1)) {
+							word = word - (alphabet.length - 1) - 1;
+						}
+
+						/* set the word to data array */
+						data[i] = alphabet[word];
+					} else {
+
+						/* if it not a word (i.e Space) so it will not be encrypt */
+						data[i] = val;
+					}
+				});
+
+				/* convert data array to string */
+				return data.join('');
+			}
+
+			function showForm() {
+				$('#nl-form').slideDown();
+				$('#form-output').slideUp();
+			}
+
+			function showResponse() {
+				$('#nl-form').slideUp();
+				$('#form-output').slideDown();
+			}
+
+			function printResponse(input) {
+				$('#form-output #response').html(input);
+			}
+
+			/* Set for Jquery */
+			$(document).ready(function() {
+
+				showForm();
+
+				/* Submit on click */
+				$('#submit').on('click', function() {
+					/* Encrypt or Decrypt */
+					var opsi = $('#opsi').val();
+
+					/* Caecar or Rot13 */
+					var algo = $('#algo').val();
+
+					/* The Content */
+					var content = $('#input').val();
+					console.log(algo);
+					switch (opsi) {
+						case 'encrypt':
+							if (algo == 'caesar') {
+								var t = enCaesar(content);
+								printResponse(t);
+							} else 
+
+							if (algo == 'rot13') {
+								var t = rot13(content);
+								printResponse(t);
+							}
+
+							else {
+								printResponse('unknown algorithm');
+							}
+						break;
+
+						case 'decrypt':
+							if (algo == 'caesar') {
+								var t = deCaesar(content);
+								printResponse(t);
+							} else 
+
+							if (algo == 'rot13') {
+								var t = rot13(content);
+								printResponse(t);
+							}
+
+							else {
+								printResponse('unknown algorithm');
+							}
+						break;
+
+						default:
+							console.log('your choice is unreachable');
+					}
+
+					showResponse();
+				});
+
+				$('#back').on('click', function() {
+					showForm();
+				});
+			});
+		</script>
+	</body>
+</html>
